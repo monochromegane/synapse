@@ -29,7 +29,7 @@ This also sorts the search results.
 ## Plugin
 
 You can prepare custom plugins.
-Plugins must be published with permitted variable names, "Profiler", "Associator" and "Searcher".
+Plugins must be implemented as Profiler or Associator or Searcher interface, and be published with permitted variable names, "Profiler", "Associator" and "Searcher".
 
 ```go
 package main
@@ -39,6 +39,7 @@ import "github.com/monochromegane/synapse"
 type profiler struct {
 }
 
+// Implement interface
 func (p profiler) Profile(ctx synapse.Context) (synapse.Profile, error) {
 	return synapse.Profile{}, nil
 }
