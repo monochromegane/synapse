@@ -4,7 +4,51 @@ A Distributed RESTful and Plugable Matching Engine.
 
 ## Usage
 
-TODO
+WIP.
+
+```go
+func main() {
+	config := synapse.Config{
+		PluginDir: "plugins",
+		Matchers: []synapse.ConfigMatcher{
+			synapse.ConfigMatcher{
+				Name: "m1",
+				Profiles: []synapse.ConfigPlugin{
+					synapse.ConfigPlugin{
+						Name:    "sample_profiler",
+						Version: "0.0.1",
+					},
+				},
+				Associator: synapse.ConfigPlugin{
+					Name:    "sample_associator",
+					Version: "0.0.1",
+				},
+				Searcher: synapse.ConfigPlugin{
+					Name:    "sample_searcher",
+					Version: "0.0.1",
+				},
+			},
+			synapse.ConfigMatcher{
+				Name: "m2",
+				Host: "http://127.0.0.1:8080",
+			},
+		},
+	}
+
+	syn, err := synapse.NewSynapse(config)
+	if err != nil {
+		panic(err)
+	}
+
+	ctx := synapse.Context{"account_id": "xxxx"}
+	hits, err := syn.Match("m1", ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%v\n", hits.IDs) // [10 15 30]
+}
+```
 
 ## Architecture
 
