@@ -63,7 +63,7 @@ Matching algorithms are provided as plugins and distributed processing is also p
 
 Matcher is composed of profilers, associator and searcher. This is provided as a [plugin](https://golang.org/pkg/plugin/).
 
-![synapse](https://user-images.githubusercontent.com/1845486/43451492-05ea97e0-94f0-11e8-9214-4307ac189b9d.jpeg)
+![synapse](https://user-images.githubusercontent.com/1845486/43510200-d53269a0-95af-11e8-8797-de73f1e9babe.jpeg)
 
 Profilers are filter group that converts subject and context into profile.
 Associator is a filter that associates profile and context with cluster.
