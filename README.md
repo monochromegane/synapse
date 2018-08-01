@@ -12,7 +12,7 @@ func main() {
 		PluginDir: "plugins",
 		Matchers: []synapse.ConfigMatcher{
 			synapse.ConfigMatcher{
-				Name: "m1",
+				Name: "users_products",
 				Profiles: []synapse.ConfigPlugin{
 					synapse.ConfigPlugin{
 						Name:    "sample_profiler",
@@ -41,7 +41,7 @@ func main() {
 	}
 
 	ctx := synapse.Context{"account_id": "xxxx"}
-	hits, err := syn.Match("m1", ctx)
+	hits, err := syn.Match("users_products", ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -73,7 +73,7 @@ This also sorts the search results.
 ## Plugin
 
 You can prepare custom plugins.
-Plugins must be implemented as Profiler or Associator or Searcher interface, and be published with permitted variable names, "Profiler", "Associator" and "Searcher".
+Plugins must be implemented as Profiler or Associator or Searcher interface, and be published with permitted function names, "NewProfiler", "NewAssociator" and "NewSearcher".
 
 ```go
 package main
@@ -84,12 +84,22 @@ type profiler struct {
 }
 
 // Implement interface
-func (p profiler) Profile(ctx synapse.Context) (synapse.Profile, error) {
+func (p *profiler) Profile(ctx synapse.Context) (synapse.Profile, error) {
 	return synapse.Profile{}, nil
 }
 
-// Export variable
-var Profiler profiler
+func (p *profiler) Initialize() error {
+	return nil
+}
+
+func (p *profiler) Finalize() error {
+	return nil
+}
+
+// Export new func
+func NewProfiler() synapse.Profiler {
+	return &profiler{}
+}
 ```
 
 And build as plugin.
