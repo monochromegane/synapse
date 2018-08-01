@@ -41,37 +41,52 @@ func matcherFromConfig(path string, m ConfigMatcher) (Matcher, error) {
 func localMatcherFromConfig(path string, m ConfigMatcher) (Matcher, error) {
 	matcher := newLocalMatcher(m)
 	for _, p := range m.Profiles {
-		sym, err := pluginSymbol(path, p, "Profiler")
+		sym, err := pluginSymbol(path, p, "NewProfiler")
 		if err != nil {
 			return nil, err
 		}
-		profiler, ok := sym.(Profiler)
+		newer, ok := sym.(func() Profiler)
 		if !ok {
 			return nil, UnexpectedTypeError{}
+		}
+		profiler := newer()
+		err = profiler.Initialize()
+		if err != nil {
+			return nil, err
 		}
 		matcher.AddProfiler(profiler)
 	}
 
 	if p := m.Associator; p.Name != "" && p.Version != "" {
-		sym, err := pluginSymbol(path, p, "Associator")
+		sym, err := pluginSymbol(path, p, "NewAssociator")
 		if err != nil {
 			return nil, err
 		}
-		associator, ok := sym.(Associator)
+		newer, ok := sym.(func() Associator)
 		if !ok {
 			return nil, UnexpectedTypeError{}
+		}
+		associator := newer()
+		err = associator.Initialize()
+		if err != nil {
+			return nil, err
 		}
 		matcher.SetAssociator(associator)
 	}
 
 	if p := m.Searcher; p.Name != "" && p.Version != "" {
-		sym, err := pluginSymbol(path, p, "Searcher")
+		sym, err := pluginSymbol(path, p, "NewSearcher")
 		if err != nil {
 			return nil, err
 		}
-		searcher, ok := sym.(Searcher)
+		newer, ok := sym.(func() Searcher)
 		if !ok {
 			return nil, UnexpectedTypeError{}
+		}
+		searcher := newer()
+		err = searcher.Initialize()
+		if err != nil {
+			return nil, err
 		}
 		matcher.SetSeacher(searcher)
 	}

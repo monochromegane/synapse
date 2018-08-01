@@ -1,7 +1,9 @@
 package synapse
 
 type Profiler interface {
+	Initialize() error
 	Profile(Context) (Profile, error)
+	Finalize() error
 }
 
 type Profile map[string]string
