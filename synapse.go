@@ -40,7 +40,7 @@ func matcherFromConfig(path string, m ConfigMatcher) (Matcher, error) {
 
 func localMatcherFromConfig(path string, m ConfigMatcher) (Matcher, error) {
 	matcher := newLocalMatcher(m)
-	for _, p := range m.Profiles {
+	for _, p := range m.Profilers {
 		sym, err := pluginSymbol(path, p, "NewProfiler")
 		if err != nil {
 			return nil, err

@@ -1,0 +1,14 @@
+plugin_dir: example/plugins
+matchers:
+  -
+    name: users_products
+    profilers:
+      -
+        name: profiler
+        version: 0.0.1
+    associator:
+      name: associator
+      version: 0.0.1
+    searcher:
+      name: searcher
+      version: 0.0.1

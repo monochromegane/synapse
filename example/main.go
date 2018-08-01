@@ -57,7 +57,7 @@ func setUpUsers() error {
 	}
 
 	tableName := "users"
-	_, err = db.Exec("DROP TABLE " + tableName)
+	_, err = db.Exec("DROP TABLE IF EXISTS " + tableName)
 	if err != nil {
 		return err
 	}
@@ -161,27 +161,10 @@ func setUpProducts() error {
 }
 
 func run() error {
-	config := synapse.Config{
-		PluginDir: "example/plugins",
-		Matchers: []synapse.ConfigMatcher{
-			synapse.ConfigMatcher{
-				Name: "users_products",
-				Profiles: []synapse.ConfigPlugin{
-					synapse.ConfigPlugin{
-						Name:    "profiler",
-						Version: "0.0.1",
-					},
-				},
-				Associator: synapse.ConfigPlugin{
-					Name:    "associator",
-					Version: "0.0.1",
-				},
-				Searcher: synapse.ConfigPlugin{
-					Name:    "searcher",
-					Version: "0.0.1",
-				},
-			},
-		},
+	config := synapse.Config{}
+	err := config.LoadYAML("example/synapse.yaml")
+	if err != nil {
+		return err
 	}
 
 	syn, err := synapse.NewSynapse(config)

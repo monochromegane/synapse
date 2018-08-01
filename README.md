@@ -8,31 +8,10 @@ WIP.
 
 ```go
 func main() {
-	config := synapse.Config{
-		PluginDir: "plugins",
-		Matchers: []synapse.ConfigMatcher{
-			synapse.ConfigMatcher{
-				Name: "users_products",
-				Profiles: []synapse.ConfigPlugin{
-					synapse.ConfigPlugin{
-						Name:    "sample_profiler",
-						Version: "0.0.1",
-					},
-				},
-				Associator: synapse.ConfigPlugin{
-					Name:    "sample_associator",
-					Version: "0.0.1",
-				},
-				Searcher: synapse.ConfigPlugin{
-					Name:    "sample_searcher",
-					Version: "0.0.1",
-				},
-			},
-			synapse.ConfigMatcher{
-				Name: "m2",
-				Host: "http://127.0.0.1:8080",
-			},
-		},
+	config := synapse.Config{}
+	err := config.LoadYAML("synapse.yaml")
+	if err != nil {
+		panic(err)
 	}
 
 	syn, err := synapse.NewSynapse(config)
@@ -40,7 +19,7 @@ func main() {
 		panic(err)
 	}
 
-	ctx := synapse.Context{"account_id": "xxxx"}
+	ctx := synapse.Context{"user_id": "1"}
 	hits, err := syn.Match("users_products", ctx)
 	if err != nil {
 		panic(err)
@@ -48,6 +27,23 @@ func main() {
 
 	fmt.Printf("%v\n", hits.IDs) // [10 15 30]
 }
+```
+
+```yaml
+plugin_dir: plugins
+matchers:
+  -
+    name: users_products
+    profilers:
+      -
+        name: profiler
+        version: 0.0.1
+    associator:
+      name: associator
+      version: 0.0.1
+    searcher:
+      name: searcher
+      version: 0.0.1
 ```
 
 ## Architecture
